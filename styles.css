@@ -72,11 +72,40 @@ button[type="submit"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
     overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 #recordsTable {
     width: 100%;
     border-collapse: collapse;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.pagination button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    color: #333;
+    font-weight: 500;
 }
 
 #recordsTable th,
