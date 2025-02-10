@@ -1,6 +1,10 @@
 // 初始化数据存储
 let records = JSON.parse(localStorage.getItem('temperatureRecords')) || [];
 
+// 分页配置
+const PAGE_SIZE = 10;
+let currentPage = 1;
+
 // 获取DOM元素
 const form = document.getElementById('temperatureForm');
 const table = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
@@ -24,7 +28,15 @@ function updateChart() {
 // 更新表格
 function updateTable() {
     table.innerHTML = '';
-    records.forEach((record, index) => {
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    const pageRecords = records.slice(startIndex, endIndex);
+
+    // 更新分页控件
+    updatePagination();
+
+    pageRecords.forEach((record, pageIndex) => {
+        const index = startIndex + pageIndex;
         const row = table.insertRow();
         const tempClass = record.temperature >= 37 ? 'high-temperature' : '';
         row.innerHTML = `
@@ -98,6 +110,30 @@ form.addEventListener('submit', (e) => {
     document.getElementById('date').value = now.toISOString().split('T')[0];
     document.getElementById('time').value = now.toTimeString().slice(0, 5);
 });
+
+// 更新分页控件
+function updatePagination() {
+    const totalPages = Math.ceil(records.length / PAGE_SIZE);
+    const paginationDiv = document.querySelector('.pagination');
+    if (!paginationDiv) {
+        const newPaginationDiv = document.createElement('div');
+        newPaginationDiv.className = 'pagination';
+        document.querySelector('.data-container').appendChild(newPaginationDiv);
+    }
+
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML = `
+        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>
+        <span>第 ${currentPage} 页 / 共 ${totalPages} 页</span>
+        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一页</button>
+    `;
+}
+
+// 切换页面
+function changePage(page) {
+    currentPage = page;
+    updateTable();
+}
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', () => {
