@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>岳宝宝专属健康体温监控</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>岳宝宝专属健康体温监控</h1>
+        
+        <div class="form-container">
+            <h2>添加记录</h2>
+            <form id="temperatureForm">
+                <div class="form-group">
+                    <label for="date">日期：</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="time">时间：</label>
+                    <input type="time" id="time" required>
+                </div>
+                <div class="form-group">
+                    <label for="temperature">体温（℃）：</label>
+                    <input type="number" id="temperature" step="0.1" min="35" max="42" required>
+                </div>
+                <div class="form-group">
+                    <label for="medication">用药情况：</label>
+                    <textarea id="medication" rows="2"></textarea>
+                </div>
+                <button type="submit">添加记录</button>
+            </form>
+        </div>
+
+        <div class="data-container">
+            <h2>记录列表</h2>
+            <table id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>时间</th>
+                        <th>体温（℃）</th>
+                        <th>用药情况</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <h2>体温变化趋势</h2>
+            <canvas id="temperatureChart"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
