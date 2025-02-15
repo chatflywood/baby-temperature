@@ -7,8 +7,9 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
+    color: rgb(55, 53, 47);
+    background-color: rgb(251, 251, 250);
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
@@ -19,40 +20,56 @@ body {
 
 h1 {
     text-align: center;
-    color: #2c3e50;
+    color: rgb(55, 53, 47);
     margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2.5em;
+    letter-spacing: -0.01em;
 }
 
 h2 {
-    color: #2c3e50;
+    color: rgb(55, 53, 47);
     margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 1.5em;
+    letter-spacing: -0.01em;
 }
 
 .form-container {
     background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    padding: 24px;
+    border-radius: 3px;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px;
+    margin-bottom: 24px;
+    transition: background 100ms ease-out 0s;
 }
 
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     font-weight: 500;
     font-size: 14px;
+    color: rgb(55, 53, 47);
 }
 
 input, textarea {
     width: 100%;
-    padding: 6px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid rgba(55, 53, 47, 0.16);
+    border-radius: 3px;
     font-size: 14px;
+    transition: background 20ms ease-in 0s;
+    background: rgb(251, 251, 250);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background: white;
+    border-color: rgb(35, 131, 226);
 }
 
 textarea {
@@ -67,12 +84,12 @@ button[type="submit"] {
 
 .data-container {
     background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
+    padding: 24px;
+    border-radius: 3px;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px;
+    margin-bottom: 16px;
     overflow-x: auto;
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
 }
 
@@ -110,14 +127,16 @@ button[type="submit"] {
 
 #recordsTable th,
 #recordsTable td {
-    padding: 8px;
+    padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+    color: rgb(55, 53, 47);
 }
 
 #recordsTable th {
-    background-color: #f8f9fa;
+    background-color: rgb(251, 251, 250);
     font-weight: 600;
+    font-size: 14px;
 }
 
 #recordsTable td:nth-child(1) { width: 15%; }
@@ -126,8 +145,27 @@ button[type="submit"] {
 #recordsTable td:nth-child(4) { width: 40%; }
 #recordsTable td:nth-child(5) { width: 15%; }
 
+.table-actions {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.export-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.export-btn:hover {
+    background-color: #45a049;
+}
+
 .high-temperature {
-    color: red;
+    color: #ff0000;
     font-weight: bold;
 }
 
@@ -155,17 +193,18 @@ button[type="submit"] {
 
 .chart-container {
     background-color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    padding: 24px;
+    border-radius: 3px;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px;
+    margin-bottom: 24px;
+    min-height: 400px;
 }
 
 @media (min-width: 1024px) {
     .container {
         display: grid;
         grid-template-columns: 300px 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto auto 1fr;
         gap: 20px;
         align-items: start;
     }
@@ -177,33 +216,38 @@ button[type="submit"] {
 
     .form-container {
         grid-column: 1;
+        grid-row: 2 / span 2;
         margin-bottom: 0;
     }
 
     .data-container {
         grid-column: 2;
+        grid-row: 2;
         margin-bottom: 20px;
     }
 
     .chart-container {
         grid-column: 2;
+        grid-row: 3;
         margin-bottom: 0;
+        height: 100%;
     }
 }
 
 button {
-    background-color: #3498db;
+    background-color: rgb(35, 131, 226);
     color: white;
-    padding: 10px 20px;
+    padding: 6px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    font-size: 14px;
+    transition: background-color 0.1s ease-out;
+    font-weight: 500;
 }
 
 button:hover {
-    background-color: #2980b9;
+    background-color: rgb(28, 105, 181);
 }
 
 .delete-btn {

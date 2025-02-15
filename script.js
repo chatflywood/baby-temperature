@@ -12,6 +12,13 @@ const table = document.getElementById('recordsTable').getElementsByTagName('tbod
 // 初始化图表
 let chart;
 
+// 获取体温对应的颜色
+function getTemperatureColor(temp) {
+    if (temp >= 38.5) return 'rgb(255, 99, 132)';
+    if (temp >= 37) return 'rgb(255, 205, 86)';
+    return 'rgb(54, 162, 235)';
+}
+
 // 更新图表数据
 function updateChart() {
     const sortedRecords = [...records].sort((a, b) => {
@@ -19,11 +26,52 @@ function updateChart() {
     });
 
     const labels = sortedRecords.map(record => `${record.date} ${record.time}`);
-    chart.data.labels = labels;
-    chart.data.datasets[0].data = sortedRecords.map(record => record.temperature);
-    chart.data.datasets[1].data = new Array(labels.length).fill(37);
-    chart.update();
+    const temperatures = sortedRecords.map(record => record.temperature);
+    const colors = temperatures.map(temp => getTemperatureColor(temp));
+
+    if (!chart) {
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '体温',
+                    data: temperatures,
+                    borderColor: colors,
+                    segment: {
+                        borderColor: ctx => getTemperatureColor(ctx.p1.parsed.y)
+                    },
+                    tension: 0.1
+                }, {
+                    label: '37℃参考线',
+                    data: Array(labels.length).fill(37),
+                    borderColor: 'red',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 35,
+                        max: 42
+                    }
+                }
+            }
+        });
+    } else {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = temperatures;
+        chart.data.datasets[0].borderColor = colors;
+        chart.data.datasets[1].data = Array(labels.length).fill(37);
+        chart.update();
+    }
 }
+
 
 // 更新表格
 function updateTable() {
@@ -39,10 +87,11 @@ function updateTable() {
         const index = startIndex + pageIndex;
         const row = table.insertRow();
         const tempClass = record.temperature >= 37 ? 'high-temperature' : '';
+        const tempStyle = record.temperature >= 37 ? 'style="color: red; font-weight: bold;"' : '';
         row.innerHTML = `
             <td>${record.date}</td>
             <td>${record.time}</td>
-            <td class="${tempClass}">${record.temperature}</td>
+            <td ${tempStyle}>${record.temperature}</td>
             <td class="editable" onclick="startEditing(this, ${index})">${record.medication || '-'}</td>
             <td>
                 <button class="delete-btn" onclick="deleteRecord(${index})">删除</button>
@@ -151,9 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tension: 0.1,
                 fill: false
             }, {
-                label: '发烧线',
+                label: '37℃参考线',
                 data: [],
-                borderColor: 'red',
+                borderColor: 'rgba(255, 0, 0, 0.5)',
                 borderDash: [5, 5],
                 pointRadius: 0,
                 fill: false
@@ -165,8 +214,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 y: {
                     min: 35,
                     max: 42,
+                    grid: {
+                        color: function(context) {
+                            if (context.tick.value >= 39) return 'rgba(255, 0, 0, 0.1)';
+                            if (context.tick.value >= 37) return 'rgba(255, 165, 0, 0.1)';
+                            return 'rgba(54, 162, 235, 0.1)';
+                        }
+                    },
                     ticks: {
-                        stepSize: 0.1
+                        stepSize: 0.1,
+                        color: function(context) {
+                            if (context.tick.value >= 39) return '#ff4444';
+                            if (context.tick.value >= 37) return '#ffa500';
+                            return '#3498db';
+                        }
                     }
                 }
             },
